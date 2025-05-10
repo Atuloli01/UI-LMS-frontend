@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NoteFlow</title>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      transition: background-color 0.3s, color 0.3s;
+    }
+  </style>
+</head>
+<body class="bg-zinc-900 text-white min-h-screen flex flex-col items-center p-8">
+
+  <h1 class="text-4xl font-bold mb-8">📝 NoteFlow</h1>
+
+  <!-- Theme Selector -->
+  <div class="mb-8 flex flex-col sm:flex-row items-center gap-4">
+    <label class="flex items-center gap-2">
+      <span>Mode:</span>
+      <select id="modeSelector" class="bg-zinc-800 text-white px-2 py-1 rounded">
+        <option value="dark">Dark</option>
+        <option value="light">Light</option>
+        <option value="custom">Custom</option>
+      </select>
+    </label>
+
+    <div id="customColors" class="hidden flex items-center gap-4">
+      <label class="flex items-center gap-2">
+        Background: <input type="color" id="bgColorPicker" />
+      </label>
+      <label class="flex items-center gap-2">
+        Text: <input type="color" id="textColorPicker" />
+      </label>
+    </div>
+  </div>
+
+  <!-- Columns -->
+  <div class="flex justify-start gap-6 w-full max-w-7xl overflow-x-auto" id="columns"></div>
+
+  <!-- Templates -->
+  <template id="column-template">
+    <div class="bg-zinc-800 p-6 rounded-2xl w-1/3 flex-shrink-0 shadow-lg">
+      <h2 class="font-semibold text-xl mb-4 text-center"></h2>
+      <div class="note-list flex flex-col gap-3 mb-4 min-h-[40px]"></div>
+      <textarea rows="2" class="note-input w-full p-2 rounded text-black resize-y font-mono focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="New note..."></textarea>
+      <button class="add-note-btn mt-3 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white w-full">Add Note</button>
+    </div>
+  </template>
+
+  <template id="note-template">
+    <div class="bg-zinc-700 p-4 rounded-xl group relative shadow hover:bg-zinc-600 transition-colors">
+      <pre class="note-content whitespace-pre-wrap break-words font-mono cursor-pointer"></pre>
+      <div class="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <button class="copy-btn text-green-400 hover:text-green-500" title="Copy">📋</button>
+        <button class="delete-btn text-red-400 hover:text-red-500" title="Delete">✕</button>
+      </div>
+    </div>
+  </template>
+
+  <!-- Theme Script -->
+  <script>
+    const modeSelector = document.getElementById('modeSelector');
+    const customColors = document.getElementById('customColors');
+    const bgColorPicker = document.getElementById('bgColorPicker');
+    const textColorPicker = document.getElementById('textColorPicker');
+
+    function applyTheme(mode) {
+      const body = document.body;
+
+      if (mode === 'dark') {
+        body.className = 'bg-zinc-900 text-white min-h-screen flex flex-col items-center p-8';
+        body.style.backgroundColor = 'black';
+        body.style.color = 'white';
+        body.style.textColor = 'white';
+        customColors.classList.add('hidden');
+      } else if (mode === 'light') {
+        body.className = 'bg-white text-black min-h-screen flex flex-col items-center p-8';
+        body.style.backgroundColor = '';
+        body.style.color = '';
+        customColors.classList.add('hidden');
+      } else if (mode === 'custom') {
+        body.className = 'min-h-screen flex flex-col items-center p-8';
+        customColors.classList.remove('hidden');
+        applyCustomColors();
+      }
+
+      localStorage.setItem('themeMode', mode);
+    }
+
+    function applyCustomColors() {
+      const bg = bgColorPicker.value;
+      const text = textColorPicker.value;
+      document.body.style.backgroundColor = bg;
+      document.body.style.color = text;
+      localStorage.setItem('customBgColor', bg);
+      localStorage.setItem('customTextColor', text);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedMode = localStorage.getItem('themeMode') || 'dark';
+      const savedBg = localStorage.getItem('customBgColor') || '#1e293b';
+      const savedText = localStorage.getItem('customTextColor') || '#ffffff';
+
+      modeSelector.value = savedMode;
+      bgColorPicker.value = savedBg;
+      textColorPicker.value = savedText;
+
+      if (savedMode === 'custom') {
+        customColors.classList.remove('hidden');
+        document.body.className = 'min-h-screen flex flex-col items-center p-8';
+        document.body.style.backgroundColor = savedBg;
+        document.body.style.color = savedText;
+      } else {
+        applyTheme(savedMode);
+      }
+    });
+
+    modeSelector.addEventListener('change', (e) => applyTheme(e.target.value));
+    bgColorPicker.addEventListener('input', applyCustomColors);
+    textColorPicker.addEventListener('input', applyCustomColors);
+  </script>
+
+  <!-- Note App Script -->
+  <script>
+    const defaultData = [
+      { title: 'Ideas', notes: [] },
+      { title: 'In Progress', notes: [] },
+      { title: 'Done', notes: [] },
+    ];
+
+    const savedData = localStorage.getItem('noteColumns');
+    const columnsData = savedData ? JSON.parse(savedData) : defaultData;
+
+    function saveNotes() {
+      localStorage.setItem('noteColumns', JSON.stringify(columnsData));
+    }
+
+    const columnsContainer = document.getElementById('columns');
+    const columnTemplate = document.getElementById('column-template');
+    const noteTemplate = document.getElementById('note-template');
+
+    function renderNotes(noteList, notes, colIndex) {
+      noteList.innerHTML = '';
+      notes.forEach((note, i) => {
+        const noteEl = noteTemplate.content.cloneNode(true);
+        const noteContent = noteEl.querySelector('.note-content');
+        const delBtn = noteEl.querySelector('.delete-btn');
+        const copyBtn = noteEl.querySelector('.copy-btn');
+
+        noteContent.textContent = note;
+
+        delBtn.addEventListener('click', () => {
+          columnsData[colIndex].notes.splice(i, 1);
+          renderNotes(noteList, columnsData[colIndex].notes, colIndex);
+          saveNotes();
+        });
+
+        copyBtn.addEventListener('click', () => {
+          navigator.clipboard.writeText(note).then(() => {
+            copyBtn.textContent = "✅";
+            setTimeout(() => copyBtn.textContent = "📋", 1000);
+          });
+        });
+
+        noteContent.addEventListener('click', () => {
+          const textarea = document.createElement('textarea');
+          textarea.value = note;
+          textarea.className = "w-full p-2 rounded font-mono text-black resize-y";
+          textarea.rows = Math.max(2, note.split('\n').length);
+          noteContent.replaceWith(textarea);
+          textarea.focus();
+
+          textarea.addEventListener('blur', () => {
+            const newValue = textarea.value.trim();
+            if (newValue) columnsData[colIndex].notes[i] = newValue;
+            renderNotes(noteList, columnsData[colIndex].notes, colIndex);
+            saveNotes();
+          });
+
+          textarea.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              textarea.blur();
+            }
+          });
+        });
+
+        noteList.appendChild(noteEl);
+      });
+    }
+
+    columnsData.forEach((column, idx) => {
+      const colEl = columnTemplate.content.cloneNode(true);
+      const container = colEl.querySelector('div');
+      const title = colEl.querySelector('h2');
+      const noteList = colEl.querySelector('.note-list');
+      const input = colEl.querySelector('.note-input');
+      const addBtn = colEl.querySelector('.add-note-btn');
+
+      container.dataset.index = idx;
+      title.textContent = column.title;
+
+      addBtn.addEventListener('click', () => {
+        const value = input.value.trim();
+        if (value) {
+          columnsData[idx].notes.push(value);
+          renderNotes(noteList, columnsData[idx].notes, idx);
+          input.value = '';
+          saveNotes();
+        }
+      });
+
+      columnsContainer.appendChild(container);
+      renderNotes(noteList, column.notes, idx);
+    });
+
+    const initDragDrop = () => {
+      document.querySelectorAll('.note-list').forEach((listEl, i) => {
+        new Sortable(listEl, {
+          group: 'shared',
+          animation: 150,
+          onEnd: (evt) => {
+            const from = evt.from;
+            const to = evt.to;
+            const fromIndex = +from.closest('[data-index]').dataset.index;
+            const toIndex = +to.closest('[data-index]').dataset.index;
+            const [movedItem] = columnsData[fromIndex].notes.splice(evt.oldIndex, 1);
+            columnsData[toIndex].notes.splice(evt.newIndex, 0, movedItem);
+            renderNotes(from, columnsData[fromIndex].notes, fromIndex);
+            renderNotes(to, columnsData[toIndex].notes, toIndex);
+            saveNotes();
+          },
+        });
+      });
+    };
+
+    setTimeout(initDragDrop, 50);
+  </script>
+</body>
+</html>

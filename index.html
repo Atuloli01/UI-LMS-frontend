@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Projects Board</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
+  <style>
+    #modeToggleContainer {
+      position: fixed;
+      top: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      transition: top 0.3s;
+    }
+    #modeToggleContainer:hover {
+      top: 10px;
+    }
+    .slider-container {
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 250px;
+    position: relative;
+  }
+
+  .slider-track {
+    display: flex;
+    gap: 30px;
+    transition: transform 1s ease-in-out;
+    align-items: center;
+  }
+
+  .slider-img {
+    width: 180px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 1rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: transform 0.6s ease, opacity 0.6s ease;
+    opacity: 0.5;
+  }
+
+  .slider-img.active {
+    transform: scale(1.5);
+    opacity: 1;
+    z-index: 10;
+  }
+    color-me {
+      font-weight: bold;
+      transition: color 0.3s ease;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-black dark:text-white font-sans">
+<header class="w-full sticky top-0 z-40 backdrop-blur-md bg-white/30 dark:bg-gray-800/30 shadow-md">
+  <div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+
+    <!-- Center Title -->
+    <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-indigo-700 dark:text-indigo-300 tracking-wide 
+                transition-transform duration-300 hover:scale-110 mx-auto absolute left-1/2 transform -translate-x-1/2">
+      My Portfolio Projects
+    </h1>
+
+    <!-- Right: Search Bar -->
+    <div class="ml-auto w-64">
+      <input
+        type="text"
+        placeholder="Search here..."
+        class="w-full pl-4 pr-4 py-2 rounded-full bg-green-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+
+  </div>
+</header>
+
+   
+  <!-- Toggle Dark Mode Button -->
+  <div id="modeToggleContainer" class="z-50">
+    <button onclick="toggleDarkMode()" class="bg-gray-200 dark:bg-gray-800 w-12 h-12 rounded-full shadow hover:bg-gray-300 dark:hover:bg-gray-700 flex items-center justify-center">
+      🌗
+    </button>
+  </div>
+
+  <!-- Sidebar + Main Content Container -->
+  <div class="flex min-h-screen">
+
+    <!-- Sidebar -->
+  <aside class="w-16 bg-white dark:bg-gray-800 shadow flex flex-col items-center py-4 space-y-6 relative">
+  <img
+    src="https://img.icons8.com/color/48/dashboard-layout.png"
+    class="w-8 cursor-pointer"
+    alt="Logo"
+    onclick="toggleRightPanel()"
+    title="Open User Panel"
+  />
+</aside>
+
+<!-- RIGHT SLIDE-OUT PANEL -->
+ <button onclick="openPanel()" class="fixed top-4 right-4 z-50 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
+    Open Panel
+  </button>
+
+  <!-- 🔲 Overlay (click to close) -->
+  <div id="overlay" class="fixed inset-0 bg-black bg-opacity-30 z-40 hidden"></div>
+
+  <!-- 👉 Slide-in Right Panel -->
+  <div id="rightPanel" class="fixed top-0 right-0 h-full w-64 bg-white dark:bg-gray-900 shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out z-50">
+    <div class="p-4 flex flex-col h-full justify-between">
+      <!-- Header -->
+      <div>
+        <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">👤 User Info</h2>
+        <img src="https://img.icons8.com/color/96/user.png" class="w-20 h-20 rounded-full mx-auto mb-2" alt="User Avatar" />
+        <p class="text-center text-gray-600 dark:text-gray-300 mb-4">Hello, Atul Oli</p>
+
+        <!-- Buttons -->
+        <div class="flex flex-col gap-3">
+          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Login</button>
+          <button class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Logout</button>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <p class="text-sm text-gray-400 dark:text-gray-500 text-center">© 2025 Learning Management System @ATUL OLI</p>
+    </div>
+  </div>
+
+    <!-- Main Content -->
+  <main class="flex-1 p-6 overflow-y-auto">
+  <div class="flex flex-col lg:flex-row gap-6">
+    <!-- Left: Glassmorphism Section -->
+    <div class="w-full lg:w-1/2">
+      <div class="p-6 bg-white/20 dark:bg-gray-700/20 backdrop-blur-lg rounded-2xl shadow-xl border border-white/30 dark:border-gray-600/30 space-y-6">
+        <h2 class="text-2xl font-bold text-indigo-700 dark:text-indigo-300">Custom Word Color Changer 🎨</h2>
+
+        <div class="flex items-center gap-4">
+          <label for="colorPicker" class="font-medium">Choose Text Color:</label>
+          <input type="color" id="colorPicker" value="#ff0000" class="rounded-full w-10 h-10 border-2 border-gray-300"/>
+          <button onclick="changeColor()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow transition">
+            Apply Color
+          </button>
+        </div>
+
+        <hr class="border-white/40 dark:border-gray-600/40" />
+
+        <p class="text-lg leading-relaxed">
+          Hello there! This is a <color-me>beautiful</color-me> day to make your <color-me>dreams</color-me> come true.
+        </p>
+
+        <button onclick="toggleFlex()" class="bg-blue-500 hover:bg-blue-600 text-white hover:text-green-600 px-4 py-2 rounded transition">
+  🔁 Toggle Flex Direction
+</button>
+
+
+        <div id="flexBox" class="flex gap-6 flex-wrap md:flex-nowrap">
+          <!-- Text Input -->
+          <div class="bg-white/30 dark:bg-gray-800/30 p-4 rounded-xl shadow flex-1">
+            <h3 class="text-lg font-semibold mb-2">📝 Input Field</h3>
+            <input type="text" placeholder="Type something cool..." class="w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white/80 dark:bg-gray-900/50 focus:outline-none focus:ring-2 focus:ring-indigo-400"/>
+          </div>
+
+          <!-- Image Upload -->
+          <div class="bg-white/30 dark:bg-gray-800/30 p-4 rounded-xl shadow flex-1">
+            <h3 class="text-lg font-semibold mb-2">📷 Upload Picture</h3>
+            <input type="file" accept="image/*" onchange="previewImage(event)" class="mb-2"/>
+            <img id="imagePreview" src="#" alt="Preview will show here" class="w-full rounded hidden"/>
+          </div>
+
+          <!-- Audio Player -->
+          <div class="bg-white/30 dark:bg-gray-800/30 p-4 rounded-xl shadow flex-1">
+            <h3 class="text-lg font-semibold mb-2">🎵 Play a Song</h3>
+            <audio controls class="w-full">
+              <source src="your-audio-file.mp3" type="audio/mpeg" />
+              Your browser doesn't support audio playback.
+            </audio>
+          </div><div class="text-right text-sm text-gray-800 dark:text-gray-200 font-mono space-y-1">
+</div>
+</div>
+            <!-- Current Date & Time -->
+  <div id="dateTimeDisplay" class="flex flex-wrap gap-4 justify-center mt-4 px-1 py-3 bg-white/10 dark:bg-gray-800/10 backdrop-blur-lg rounded-2xl shadow-inner border border-white/20 dark:border-gray-600/30 max-w-md ml-auto">
+    <!-- Time -->
+    <div class="flex-2 bg-white/30 dark:bg-gray-700/30 backdrop-blur-sm rounded-xl px-5 py-3 shadow-lg text-left transition-all duration-300 hover:scale-105 hover:shadow-xl">
+      <div class="text-sm uppercase text-gray-700 dark:text-gray-300 font-semibold tracking-wide mb-1">Time</div>
+      <div id="clockTime" class="text-3xl font-bold tracking-widest text-gray-900 dark:text-white font-mono">
+        00:00:00
+      </div>
+    </div>
+
+    <!-- Date -->
+    <div class="flex-1 bg-white/30 dark:bg-gray-700/30 backdrop-blur-sm rounded-xl px-5 py-3 shadow-lg text-center transition-all duration-300 hover:scale-105 hover:shadow-xl">
+      <div class="text-sm uppercase text-gray-700 dark:text-gray-300 font-semibold tracking-wide mb-1">Date</div>
+      <div id="clockDate" class="text-lg font-semibold tracking-wider text-gray-900 dark:text-white font-mono">
+        Loading...
+      </div>
+    </div>
+</div>
+      </div>
+    <a href="./frontend/pageTwo/indexSecond.html" class="group">  
+  <div class="fixed left-4 top-30/2 -translate-y-20/2 z-60 my-10 mx-12">
+    <button class="relative px-6 py-3 text-white text-lg font-bold rounded-r-full bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 overflow-hidden shadow-lg hover:shadow-xl transition duration-500">
+      <span class="relative z-10">GO to NEW PAGE ...</span>
+      <div class="absolute inset-0 bg-white/10 blur-sm group-hover:animate-pulse rounded-r-full"></div>
+    </button>
+  </div>
+</a>
+    </div>
+    <main class="flex-1 p-6 overflow-y-auto">
+      <!-- Header -->
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h1 class="text-2xl font-bold">Projects Board</h1>
+          <p class="text-gray-500 dark:text-gray-400 text-sm">List of your ongoing projects</p>
+        </div>
+      <a href="#" onclick="openModal()" role="button" 
+   class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow inline-block text-center">
+  + New Notes...
+</a>
+<div id="popupModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+  <div class="bg-white w-11/12 max-w-3xl h-[80vh] rounded-xl shadow-lg relative overflow-hidden">
+    <button id="closeModalButton" onclick="closeModal()" class="absolute top-3 right-4 text-2xl font-bold z-10">
+  &times;
+</button>
+    <iframe src="./insideIndex.html" class="w-full h-full border-0"></iframe>
+  </div>
+</div>
+
+      </div>
+
+      <!-- Projects Grid -->
+      <div id="projects" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Cards will be injected here -->
+      </div>
+
+      <!-- Image Slider Section -->
+      <!-- Auto Image Slider Section -->
+<div class="mt-10">
+  <h2 class="text-xl font-semibold mb-4 text-center">Project Gallery</h2>
+  <div class="slider-container">
+    <div class="slider-track" id="sliderTrack">
+      <img src="./frontend/images/download (1).jpg" class="slider-img" />
+      <img src="./frontend/images/download.jpg" class="slider-img" />
+      <img src="./frontend/images/images (2).jpg" class="slider-img" />
+      <img src="./frontend/images/images (3).jpg" class="slider-img" />
+      <img src="./frontend/images/images (4).jpg" class="slider-img" />
+      <img src="./frontend/images/images (3).jpg" class="slider-img" />
+    </div>
+  </div>
+</div>
+
+    </main>
+  </div>
+
+  <!-- FontAwesome for icons -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+  <!-- JavaScript to Generate Cards and Toggle Mode -->
+  <script>
+    const projectData = [
+      {
+        title: "Software Engineering",
+        subtitle: "Prototyping",
+        date: "May 01, 2021",
+        progress: 78,
+        color: "orange-500",
+        timeLeft: "1 week left",
+        avatars: [3, 4, 5]
+      },
+      {
+        title: "Design Learn Management System",
+        subtitle: "UI/UX Design",
+        date: "June 04, 2021",
+        progress: 25,
+        color: "sky-300",
+        timeLeft: "2 week left",
+        avatars: [6, 7, 8]
+      },
+      {
+        title: "Chat Mobile App",
+        subtitle: "Prototyping",
+        date: "Oct 27, 2021",
+        progress: 52,
+        color: "pink-300",
+        timeLeft: "6 week left",
+        avatars: [9, 10]
+      },
+      {
+        title: "Store Dashboard",
+        subtitle: "UI/UX Design",
+        date: "Sep 16, 2021",
+        progress: 33,
+        color: "green-200",
+        timeLeft: "3 week left",
+        avatars: [11, 12, 13]
+      },
+      {
+        title: "Encryption and Decryption",
+        subtitle: "Prototyping",
+        date: "Jan 03, 2021",
+        progress: 54,
+        color: "rose-200",
+        timeLeft: "1 week left",
+        avatars: [14, 15, 16]
+      },
+      {
+        title: "LMS App Design",
+        subtitle: "UI/UX Design",
+        date: "Jan 03, 2021",
+        progress: 78,
+        color: "amber-200",
+        timeLeft: "2 week left",
+        avatars: [17, 18, 19]
+      }
+    ];
+
+    const tailwindColorMap = {
+      "orange-500": "#f97316",
+      "sky-300": "#7dd3fc",
+      "pink-300": "#f9a8d4",
+      "green-200": "#bbf7d0",
+      "rose-200": "#fecdd3",
+      "amber-200": "#fde68a"
+    };
+
+    const container = document.getElementById("projects");
+
+    projectData.forEach(project => {
+      const card = document.createElement("div");
+      card.className = `text-white p-4 rounded-xl shadow relative transition transform hover:scale-105`;
+      card.style.backgroundColor = tailwindColorMap[project.color] || "#ccc";
+
+      card.innerHTML = `
+        <div class="text-sm mb-1">${project.date}</div>
+        <h3 class="text-lg font-semibold">${project.title}</h3>
+        <p class="text-sm opacity-90">${project.subtitle}</p>
+        <div class="mt-4 bg-white/30 h-2 rounded-full overflow-hidden">
+          <div class="bg-white h-full" style="width: ${project.progress}%;"></div>
+        </div>
+        <div class="flex items-center justify-between mt-4">
+          <div class="flex -space-x-2">
+            ${project.avatars.map(num => `<img class="w-8 h-8 rounded-full border-2 border-white" src="https://i.pravatar.cc/40?img=${num}" />`).join("")}
+          </div>
+          <span class="bg-white text-gray-800 text-xs px-2 py-1 rounded-full">${project.timeLeft}</span>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+
+    function toggleDarkMode() {
+      document.documentElement.classList.toggle('dark');
+    }
+    const track = document.getElementById("sliderTrack");
+  const imgs = Array.from(track.children);
+  let currentIndex = 0;
+
+  function updateSlider() {
+    // Reset all images
+    imgs.forEach(img => img.classList.remove("active"));
+
+    // Add active class to center image
+    const center = Math.floor(imgs.length / 2);
+    imgs[center].classList.add("active");
+
+    // Animate scroll
+    track.style.transition = "transform 0.8s ease";
+    track.style.transform = `translateX(-${imgs[1].offsetLeft - imgs[0].offsetLeft}px)`;
+
+    // Reorder DOM after animation
+    setTimeout(() => {
+      track.appendChild(imgs.shift()); // Move first image to the end
+      track.style.transition = "none";
+      track.style.transform = `translateX(0)`;
+      imgs.push(track.lastElementChild); // Update the reference
+    }, 800);
+  }
+
+  // Start infinite loop
+  setInterval(updateSlider, 2000);
+  updateSlider(); // Initial run
+
+    function changeColor() {
+      const color = document.getElementById('colorPicker').value;
+      const tags = document.querySelectorAll('color-me');
+      tags.forEach(tag => {
+        tag.style.color = color;
+      });
+    }
+
+    function toggleFlex() {
+      const container = document.getElementById('flexBox');
+      container.style.flexDirection = container.style.flexDirection === 'column' ? 'row' : 'column';
+    }
+
+    function previewImage(event) {
+      const file = event.target.files[0];
+      const preview = document.getElementById('imagePreview');
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          preview.src = e.target.result;
+          preview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+    // DATE & TIME
+  function updateDateTimeFancy() {
+  const now = new Date();
+
+  const time = now.toLocaleTimeString('en-US', {
+    hour12: false,
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+
+  const date = now.toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: '2-digit',
+    year: 'numeric'
+  });
+
+  document.getElementById('clockTime').textContent = time;
+  document.getElementById('clockDate').textContent = date;
+}
+
+setInterval(updateDateTimeFancy, 1000);
+updateDateTimeFancy(); // Initial call
+
+function toggleRightPanel() {
+    const panel = document.getElementById("rightPanel");
+    panel.classList.toggle("translate-x-full");
+    panel.classList.toggle("translate-x-0");
+  }
+
+  const rightPanel = document.getElementById('rightPanel');
+    const overlay = document.getElementById('overlay');
+
+    function openPanel() {
+      rightPanel.classList.remove('translate-x-full');
+      overlay.classList.remove('hidden');
+    }
+
+    function closePanel() {
+      rightPanel.classList.add('translate-x-full');
+      overlay.classList.add('hidden');
+    }
+
+    // Close panel on overlay click
+    overlay.addEventListener('click', closePanel);
+
+    // Optional: Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === "Escape") {
+        closePanel();
+      }
+    });
+function openModal() {
+    document.getElementById('popupModal').classList.remove('hidden');
+  }
+
+  function closeModal() {
+    document.getElementById('popupModal').classList.add('hidden');
+  }
+  const closeModalButton = document.getElementById('closeModalButton');
+
+function applyButtonTextColorBasedOnMode(mode) {
+  if (mode === 'dark') {
+    closeModalButton.classList.remove('text-black');
+    closeModalButton.classList.add('text-white');
+  } else {
+    closeModalButton.classList.remove('text-white');
+    closeModalButton.classList.add('text-black');
+  }
+}
+
+function applyTheme(mode) {
+  const body = document.body;
+
+  if (mode === 'dark') {
+    body.className = 'bg-zinc-900 text-white min-h-screen flex flex-col items-center p-8';
+    applyButtonTextColorBasedOnMode('dark');
+  } else if (mode === 'light') {
+    body.className = 'bg-white text-black min-h-screen flex flex-col items-center p-8';
+    applyButtonTextColorBasedOnMode('light');
+  } else if (mode === 'custom') {
+    body.className = 'min-h-screen flex flex-col items-center p-8';
+    customColors.classList.remove('hidden');
+    applyCustomColors();
+    // Update button color when in custom mode.
+    applyButtonTextColorBasedOnMode(mode);
+  }
+
+  localStorage.setItem('themeMode', mode);
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const savedMode = localStorage.getItem('themeMode') || 'dark';
+  const savedBg = localStorage.getItem('customBgColor') || '#1e293b';
+  const savedText = localStorage.getItem('customTextColor') || '#ffffff';
+
+  modeSelector.value = savedMode;
+  bgColorPicker.value = savedBg;
+  textColorPicker.value = savedText;
+
+  if (savedMode === 'custom') {
+    customColors.classList.remove('hidden');
+    document.body.className = 'min-h-screen flex flex-col items-center p-8';
+    document.body.style.backgroundColor = savedBg;
+    document.body.style.color = savedText;
+  } else {
+    applyTheme(savedMode);
+  }
+});
+
+  </script>
+</body>
+</html>

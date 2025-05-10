@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Feedback Collector</title>
+  <link rel="stylesheet" href="styleSecond.css" />
+</head>
+<body>
+<div class="container mx-auto px-6 py-8 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg shadow-lg" style="height: 600px; width: 80%; max-width: 1200px;">
+  <h1 class="text-center text-3xl font-semibold text-white mb-6">🌈 Leave Your Feedback</h1>
+  <form id="feedbackForm" enctype="multipart/form-data" class="space-y-6">
+    
+    <!-- Flex Container for Input and Image Upload -->
+    <div id="flexBox" class="flex gap-6 flex-wrap md:flex-nowrap">
+      
+      <!-- Text Input -->
+      <div class="bg-white/90 dark:bg-gray-800/80 p-6 rounded-xl shadow-xl flex-1 transition-all hover:shadow-2xl">
+        <h3 class="text-xl font-semibold mb-3 text-indigo-700">📝 Input Field</h3>
+        <input name="textInput" type="text" placeholder="Type something cool..." class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white/90 dark:bg-gray-900/80 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all hover:border-indigo-400"/>
+      </div>
+
+      <!-- Image Upload -->
+      <div class="bg-white/90 dark:bg-gray-800/80 p-6 rounded-xl shadow-xl flex-1 transition-all hover:shadow-2xl">
+        <h3 class="text-xl font-semibold mb-3 text-indigo-700">📷 Upload Picture</h3>
+        <input name="image" type="file" accept="image/*" onchange="previewImage(event)" class="mb-3 px-4 py-2 border border-gray-300 rounded-xl focus:outline-none dark:bg-gray-800 dark:border-gray-600 dark:text-white transition-all"/>
+        <img id="imagePreview" src="#" alt="Preview" class="w-full rounded-xl hidden transition-all"/>
+      </div>
+    </div>
+
+    <!-- Textarea for Feedback -->
+<div class="relative mb-10">
+  <textarea name="feedback" id="feedback" placeholder="Say something nice..." class="w-[400px] px-6 py-8 mt-10 rounded-xl border border-gray-300 dark:border-gray-600 bg-white/90 dark:bg-gray-900/80 focus:outline-none focus:ring-4 focus:ring-indigo-600 focus:ring-opacity-50 focus:bg-indigo-50 dark:focus:bg-indigo-900 transition-all"></textarea>
+
+  <div class="absolute top-2 right-4 text-indigo-500 font-semibold pointer-events-none">Max 500 chars</div>
+</div>
+
+
+
+    <!-- Submit Button -->
+    <button type="submit" class="w-full py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-all ease-in-out">Send Feedback</button>
+  </form>
+
+  <!-- Response Message -->
+  <p id="response" class="mt-4 text-green-600 font-semibold text-center"></p>
+
+  <!-- Link to View All Feedback -->
+  <a href="results.php" target="_blank" class="block mt-6 text-center text-indigo-600 font-semibold hover:underline transition-all">📜 View All Feedback</a>
+</div>
+
+  <script src="scriptSecond.js"></script>
+</body>
+</html>
