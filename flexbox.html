@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flexbox Mosaic Grid</title>
+    <style>
+        body {
+  margin: 0;
+  padding: 0;
+  height: auto;
+  width: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #222;
+}
+
+.grid-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  width: 90vw;
+  max-width: 1200px;
+  background: black;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.grid-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  border-radius: 50px;
+}
+
+/* Different Sizes */
+.small {
+  flex: 1 1 100px;
+  height: 50px;
+}
+.medium {
+  flex: 1 1 200px;
+  height: 100px;
+}
+.large {
+  flex: 2 1 300px;
+  height: 200px;
+}
+
+    </style>
+        
+</head>
+<body>
+    <div class="grid-container" id="gridContainer"></div>
+
+    <script>
+        const gridContainer = document.getElementById("gridContainer");
+
+// Define items dynamically
+const items = [
+  { size: "large", color: "#8e44ad" },
+  { size: "medium", color: "#27ae60" },
+  { size: "small", color: "#3498db" },
+  { size: "medium", color: "#e74c3c" },
+  { size: "large", color: "#9b59b6" },
+  { size: "small", color: "#2980b9" },
+  { size: "medium", color: "#c0392b" },
+  { size: "large", color: "#8e44ad" },
+];
+
+// Create divs dynamically
+items.forEach((item) => {
+  const div = document.createElement("div");
+  div.classList.add("grid-item", item.size);
+  div.style.background = item.color;
+  gridContainer.appendChild(div);
+});
+    </script>
+</body>
+</html>
